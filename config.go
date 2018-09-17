@@ -52,6 +52,9 @@ type Config struct {
 	// How long after a node is dead in memberlist do we prune it from the
 	// raft group
 	PruneDuration time.Duration
+
+	// User specified FSM for the underlying raft layer
+	FSM raft.FSM
 }
 
 func NewDefaultConfig(initialPeerSet []string) (*Config, error) {

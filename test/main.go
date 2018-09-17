@@ -10,18 +10,19 @@ import (
 	"time"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/kahuang/quorum"
 )
 
 func main() {
-	config, err := NewDefaultConfig([]string{"10.10.2.224"})
+	config, err := quorum.NewDefaultConfig([]string{"10.10.2.224"})
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	quorumNode, err := NewQuorumNode(config)
+	quorumNode, err := quorum.NewQuorumNode(config)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	httpApi := NewHTTPApi(quorumNode)
+	httpApi := quorum.NewHTTPApi(quorumNode)
 	router := httprouter.New()
 	httpApi.Start(router)
 	srv := &http.Server{Addr: ":" + config.Port, Handler: router}

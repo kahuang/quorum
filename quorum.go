@@ -59,16 +59,24 @@ type QuorumNode struct {
 	metrics *Metrics
 }
 
-//TODO: pluggable store?
-func (q *QuorumNode) Apply(*raft.Log) interface{} {
+func (q *QuorumNode) Apply(l *raft.Log) interface{} {
+	if q.Config.FSM != nil {
+		return q.Config.FSM.Apply(l)
+	}
 	return true
 }
 
 func (q *QuorumNode) Snapshot() (raft.FSMSnapshot, error) {
+	if q.Config.FSM != nil {
+		return q.Config.FSM.Snapshot()
+	}
 	return &fsmSnapshot{}, nil
 }
 
 func (q *QuorumNode) Restore(rc io.ReadCloser) error {
+	if q.Config.FSM != nil {
+		return q.Config.FSM.Restore(rc)
+	}
 	return nil
 }
 
